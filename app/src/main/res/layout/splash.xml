@@ -12,5 +12,6 @@
         android:layout_height="wrap_content"
         android:background="@color/design_default_color_primary_dark"
         android:contentDescription="@string/todo"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo"
+        android:scaleType="centerCrop"/>
 </FrameLayout>
