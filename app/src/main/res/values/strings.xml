@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Rick&amp;Morty wiki</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_num1">Sort by Id</string>
+    <string name="action_num2">Sort by Name</string>
+
     <string name="todo">TODO</string>
     <string name="textview">TextView</string>
 

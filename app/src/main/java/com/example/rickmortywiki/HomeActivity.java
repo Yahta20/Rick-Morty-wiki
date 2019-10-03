@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +28,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 
@@ -36,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     private JSONObject jsonObject = null;
     private LinearLayout lo4spc;
 
-    private ArrayList<String> al = new ArrayList<String>();
+    private ArrayList<Char> al = new ArrayList<Char>();
 
     private RequestTask rt ;
 
@@ -75,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 for (int i=0;i<jsonArray.length();i++){
                     JSONObject obj1 = jsonArray.getJSONObject(i);
-                    al.add((String) obj1.getString("name"));
+                    al.add(new Char ((Integer)obj1.getInt("id"),(String) obj1.getString("name")));
                 }
                 jsonObject = new JSONObject(buffer.toString());
                 JSONObject obj1 = jsonObject.getJSONObject("info");
@@ -138,8 +141,10 @@ public class HomeActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        lo4spc.removeAllViews();
+        Collections.sort(al,new SortById());
         for (int i=0;i<al.size();i++){
-            BtnGen(this,lo4spc,al.get(i),i);
+            BtnGen(this,lo4spc,al.get(i).getNameInfo(),al.get(i).getIdInfo());
         }
 
     }
@@ -155,8 +160,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
         final TextView tvID1       =   new TextView(c);
-        tvID1.       setLayoutParams(lil);
-        tvID1.setGravity(Gravity.CENTER);
+        tvID1.       setLayoutParams(lilw);
+        tvID1.setText(Integer.toString(i));
+        tvID1.setGravity(Gravity.LEFT);
         ll.         addView(tvID1     );
 
         final TextView tvID       =   new TextView(c);
@@ -170,67 +176,45 @@ public class HomeActivity extends AppCompatActivity {
                  tvID.setText(Integer.toString(tvID.getId()));
             }
         });
-        tvID.setGravity(Gravity.CENTER);
+        tvID.setGravity(Gravity.LEFT);
         ll.         addView(tvID     );
-
-        final TextView tvID2       =   new TextView(c);
-        tvID2.       setLayoutParams(lil);
-        tvID2.setGravity(Gravity.CENTER);
-        ll.         addView(tvID2     );
-
-
-
     }
 
-    protected void ButtnGen(Context c, LinearLayout inll,String tv1,String tv2,String tv3,String tv4){
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-        LinearLayout.LayoutParams lil = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        LinearLayout ll = new LinearLayout(c);
-        ll.setOrientation(LinearLayout.HORIZONTAL);
-        ll.       setLayoutParams(lil);
-        inll.addView(ll);
-
-
-        final Button prof         =   new Button  (c);
-        prof.       setLayoutParams(lil);
-        prof.       setText("PIC"  );
-        prof.setGravity(Gravity.CENTER);
-        prof.setId(BUTTONID+countID);
-        prof.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                // вызов окна с данными
-                prof.setText("-0-");
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_1) {
+            lo4spc.removeAllViews();
+            Collections.sort(al,new SortById());
+            for (int i=0;i<al.size();i++){
+                BtnGen(this,lo4spc,al.get(i).getNameInfo(),al.get(i).getIdInfo());
             }
-        });
-        ll.addView(prof     );
+            return true;
+        }
+        if (id == R.id.action_2) {
+            lo4spc.removeAllViews();
+            Collections.sort(al,new SortByName());
+            for (int i=0;i<al.size();i++){
+                BtnGen(this,lo4spc,al.get(i).getNameInfo(),al.get(i).getIdInfo());
+            }
+            return true;
+        }
 
-
-        TextView tvID       =   new TextView(c);
-        tvID.       setLayoutParams(lil);
-        tvID.       setText(tv1       );
-        tvID.setGravity(Gravity.CENTER);
-        ll.         addView(tvID     );
-
-        TextView tvName     =   new TextView(c);
-        tvName.     setLayoutParams(lil);
-        tvName.     setText(tv2   );
-        tvName.setGravity(Gravity.CENTER);
-        ll.addView(tvName   );
-
-        TextView tvGender   =   new TextView(c);
-        tvGender.   setLayoutParams(lil);
-        tvGender.   setText(tv3    );
-        tvGender.setGravity(Gravity.CENTER);
-        ll.addView(tvGender );
-
-        TextView tvStatus   =   new TextView(c);
-        tvStatus.   setLayoutParams(lil);
-        tvStatus.   setText(tv4    );
-        tvStatus.setGravity(Gravity.CENTER);
-        ll.addView(tvStatus );
-
+        return super.onOptionsItemSelected(item);
     }
+
 }
 /*
 
