@@ -28,11 +28,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -57,30 +52,44 @@ public class HomeActivity extends AppCompatActivity {
             BufferedReader reader =null;
             try {
                 URL url = new URL (urls[0]);
+                String y = "_";
+                //-1-получение списка всех персонажей
+                do {
+                //-11-запрос в "космос"
+
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
-
                 InputStream stream = connection.getInputStream();
-
                 reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuffer buffer = new StringBuffer();
-
                 String line = "";
                 while (( line = reader.readLine())!= null){
                     buffer.append(line);
                 }
-                //-------------------------------------
+                //-11-запрос в "космос"
+
+                //-12-обработка-запросов-----------------------------
                 jsonObject = new JSONObject(buffer.toString());
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
 
 
-                for (int i=0;i<20;i++){
+                for (int i=0;i<jsonArray.length();i++){
                     JSONObject obj1 = jsonArray.getJSONObject(i);
                     al.add((String) obj1.getString("name"));
-
                 }
+                jsonObject = new JSONObject(buffer.toString());
+                JSONObject obj1 = jsonObject.getJSONObject("info");
+
+                url = new URL (obj1.getString("next"));
+
+                y = obj1.getString("next");
+                }
+                while (y!="");
                 //-------------------------------------
-                return "True";
+
+
+                return y;
+                //-1-получение списка всех персонажей
             }
             catch (Exception e){
                 return e.getMessage();
@@ -115,8 +124,7 @@ public class HomeActivity extends AppCompatActivity {
         //cntx = getApplicationContext();
         lo4spc = findViewById(R.id.space4data);
         jsonReqest="5";
-        //1-Creation-of-database--------------------------------------------
-        OkHttpClient  client = new OkHttpClient();
+        //1-Creation-of-database-------------------------------------------
         rt = new RequestTask();
 
 
@@ -124,18 +132,19 @@ public class HomeActivity extends AppCompatActivity {
         rt.execute(url);
         try {
             jsonReqest = rt.get();
+            Toast.makeText(this,jsonReqest,Toast.LENGTH_LONG).show();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         for (int i=0;i<al.size();i++){
-            BtnGen(this,lo4spc,al.get(i));
+            BtnGen(this,lo4spc,al.get(i),i);
         }
 
     }
 
-    protected void BtnGen(Context c, LinearLayout inll,String tv1){
+    protected void BtnGen(Context c, LinearLayout inll,String tv1,int i){
 
         LinearLayout.LayoutParams lilw = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,5);
         LinearLayout.LayoutParams lil = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT,1);
@@ -153,12 +162,12 @@ public class HomeActivity extends AppCompatActivity {
         final TextView tvID       =   new TextView(c);
         tvID.       setLayoutParams(lil);
         tvID.       setText(tv1       );
-        tvID.setId(BUTTONID+countID);
+        tvID.setId(BUTTONID+i);
 
         tvID.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 // вызов окна с данными
-                // tvID.setText("-0-");
+                 tvID.setText(Integer.toString(tvID.getId()));
             }
         });
         tvID.setGravity(Gravity.CENTER);
@@ -224,43 +233,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 }
 /*
-
-
-
-                 URL url  = urls[0];
-
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Accept-Language","en-US,en,q=0.5");
-
-                String urlParameters = urls[1]+"="+urls[2];
-
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
-
-                writer.write(urlParameters);
-
-                writer.close();
-
-                wr.close();
-
-                int responseCome = con.getResponseCode();
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                String inputLine;
-
-                StringBuffer response = new StringBuffer();
-
-                while (( inputLine = reader.readLine())!= null){
-
-                    response.append(inputLine);
-                }
-                reader.close();
-
-                respon = response.toString();
 
 
 
