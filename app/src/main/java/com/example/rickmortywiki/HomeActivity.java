@@ -1,6 +1,7 @@
 package com.example.rickmortywiki;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -135,7 +136,6 @@ public class HomeActivity extends AppCompatActivity {
         rt.execute(url);
         try {
             jsonReqest = rt.get();
-            Toast.makeText(this,jsonReqest,Toast.LENGTH_LONG).show();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -173,7 +173,10 @@ public class HomeActivity extends AppCompatActivity {
         tvID.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
                 // вызов окна с данными
-                 tvID.setText(Integer.toString(tvID.getId()));
+                 //tvID.setText(Integer.toString(tvID.getId()));
+                Intent i = new Intent(HomeActivity.this, Profile.class);
+                i.putExtra("Id", String.valueOf(tvID.getId()-BUTTONID).toString());
+                startActivity(i);
             }
         });
         tvID.setGravity(Gravity.LEFT);

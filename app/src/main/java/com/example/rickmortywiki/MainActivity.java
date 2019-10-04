@@ -31,11 +31,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.splash);
 
         new Handler().postDelayed(new Runnable() {
+
             @Override
             public void run() {
                 Intent i = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(i);
-                finish();
+            finish();
             }
         },2*1000);
     }
