@@ -29,16 +29,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+        Intent i = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(i);
+        finish();
 
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                startActivity(i);
-            finish();
-            }
-        },2*1000);
     }
 
 
